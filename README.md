@@ -1,112 +1,41 @@
-# 🚀 Proceso de Despliegue – PokeDex Angular
+# 🔐 Reflexión Técnica – Seguridad en el Despliegue de PokeDex
 
-## 1. 📁 Creación del Repositorio
+## 1. ¿Qué vulnerabilidades previenen los encabezados implementados?
 
-Se creó un repositorio en GitHub para alojar el proyecto PokeDex Angular.
+Los encabezados de seguridad HTTP implementados permiten mitigar diversas vulnerabilidades comunes en aplicaciones web. Por ejemplo, el encabezado **Content-Security-Policy (CSP)** ayuda a prevenir ataques de tipo Cross-Site Scripting (XSS), ya que restringe las fuentes desde donde se pueden cargar scripts y otros recursos.
 
----
+El encabezado **Strict-Transport-Security (HSTS)** obliga a que todas las conexiones se realicen mediante HTTPS, evitando ataques de tipo Man-in-the-Middle (MITM).
 
-## 2. ⚙️ Configuración del Proyecto
+Por otro lado, **X-Content-Type-Options: nosniff** evita que el navegador interprete incorrectamente los tipos de archivos, reduciendo riesgos de ejecución de código malicioso.
 
-Se verificó que el proyecto Angular contara con:
+El encabezado **X-Frame-Options: DENY** protege contra ataques de clickjacking, impidiendo que la aplicación sea cargada dentro de iframes externos.
 
-* Archivo `package.json`
-* Script de build:
-
-```bash
-npm run build
-```
+Finalmente, **Referrer-Policy: no-referrer** evita la exposición de información sensible en las cabeceras HTTP al navegar entre sitios.
 
 ---
 
-## 3. ☁️ Despliegue en Azure Static Web Apps
+## 2. ¿Qué aprendiste sobre la relación entre despliegue y seguridad web?
 
-Se utilizó Azure Static Web Apps para desplegar la aplicación.
+Aprendí que el despliegue de una aplicación web no solo consiste en hacerla accesible en internet, sino también en asegurarla adecuadamente. La seguridad es una parte fundamental del proceso de despliegue, ya que una aplicación expuesta sin protección puede ser vulnerable a múltiples ataques.
 
-### Configuración del archivo YAML:
+Además, entendí que herramientas como los encabezados HTTP de seguridad permiten fortalecer la aplicación sin necesidad de modificar directamente el código fuente. También aprendí la importancia de validar la seguridad utilizando herramientas como escáneres web, que permiten medir el nivel de protección implementado.
 
-```yaml
-app_location: "pokedex-angular"
-api_location: ""
-output_location: "dist/pokedex-angular"
-app_build_command: "npm run build"
-```
+En resumen, el despliegue y la seguridad están completamente relacionados: una aplicación bien desplegada debe ser funcional, accesible y segura al mismo tiempo.
 
 ---
 
-## 4. 🔧 Problemas Encontrados y Soluciones
+## 3. ¿Qué desafíos encontraste en el proceso?
 
-### ❌ Error: No se encontraba el build
+Durante el proceso, uno de los principales desafíos fue la configuración correcta de las rutas y archivos en el entorno de despliegue, especialmente al trabajar con servicios en la nube como Azure Static Web Apps.
 
-**Causa:** Ruta incorrecta en YAML
-**Solución:** Ajustar `app_location` y `output_location`
+También resultó complicado entender por qué ocurrían ciertos errores durante el build y despliegue, como problemas con la ubicación del proyecto o incompatibilidades de versiones de Node.js.
 
----
+Otro desafío importante fue la implementación de los encabezados de seguridad, ya que era necesario comprender qué hace cada uno y cómo configurarlos correctamente sin afectar el funcionamiento de la aplicación.
 
-### ❌ Error: Node incompatible
-
-**Causa:** Azure usaba Node 22
-**Solución:**
-
-```json
-"engines": {
-  "node": "18.x"
-}
-```
+Finalmente, interpretar los resultados del escaneo de seguridad y mejorar la calificación requirió ajustes y pruebas adicionales hasta lograr un nivel adecuado de protección.
 
 ---
 
-### ❌ Error: No encontraba package.json
+## ✅ Conclusión
 
-**Causa:** Proyecto en subcarpeta
-**Solución:** Configurar correctamente la ruta en YAML
-
----
-
-## 5. 🔐 Implementación de Seguridad
-
-Se creó el archivo:
-
-```bash
-staticwebapp.config.json
-```
-
-Con los siguientes encabezados:
-
-```json
-{
-  "globalHeaders": {
-    "Content-Security-Policy": "default-src 'self'; img-src 'self' data: https:; script-src 'self' 'unsafe-inline' https:; style-src 'self' 'unsafe-inline' https:; font-src 'self' https: data:; connect-src 'self' https:;",
-    "Strict-Transport-Security": "max-age=31536000; includeSubDomains; preload",
-    "X-Content-Type-Options": "nosniff",
-    "X-Frame-Options": "DENY",
-    "Referrer-Policy": "no-referrer",
-    "X-XSS-Protection": "1; mode=block"
-  }
-}
-```
-
----
-
-## 6. 🧪 Validación de Seguridad
-
-Se utilizó la herramienta:
-
-👉 https://securityheaders.com/
-
-Resultado esperado: A o A+
-
----
-
-## 7. ✅ Verificaciones Finales
-
-* Aplicación accesible desde internet ✔
-* HTTPS activo ✔
-* Sin errores en consola ✔
-* Buen puntaje en seguridad ✔
-
----
-
-## 🎯 Conclusión
-
-El despliegue de la aplicación fue exitoso, logrando una implementación funcional y segura. Se aplicaron buenas prácticas de DevOps y seguridad web, asegurando la protección de la aplicación frente a posibles vulnerabilidades.
+Este proceso permitió comprender que la seguridad web es un componente esencial en cualquier despliegue. No basta con que una aplicación funcione correctamente, también debe proteger la información y garantizar una experiencia segura para el usuario.
